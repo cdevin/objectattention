@@ -1,0 +1,24 @@
+##########################################################################
+# An example file for learning task-specific attention from demonstrations
+taskname: taskdata/pouring
+# All following filenames are relative to taskdata/pouring/
+
+#weights and results will be stored in taskdata/pouring/myexperiment/
+experimentname: myexperiment
+
+data:
+    states: X.npy
+    images: img.npy # Images are assumed to be stored in BGR. ROS cameras tend to output in BGR so be careful!
+    image_height : 480
+    image_width : 480
+    deltas: U.npy
+
+# These files will be created when process_demo_data.py is run, and they will be used when train_model.py is run.
+middata:
+    features: features.npy
+    boxes: boxes.npy
+
+# Model hyperparameters
+hyperparams:
+    num_boxes: 60 # For more than 60, you will need to change line 162 in rpn_net/util/faster_rcnn_lib/fast_rcnn/config.py
+    num_attentions: 1
