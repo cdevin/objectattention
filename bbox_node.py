@@ -17,7 +17,8 @@ class ImgProcessor:
     Currently only for tf models
     """
     def __init__(self, box_features, camera_channel='/camera_crop/image_rect_color',
-                 feature_channel='/attention_publisher'):
+                 bbox_channel='/objectattention/bbox', feat_channel='/objectattention/features',
+                 similarity_channel='/objectattention/similarity'):
         """ weights should be a dictionary with variable names as keys and weights as values
         """
         print "start"
@@ -28,7 +29,9 @@ class ImgProcessor:
         print "session"
         self.init_model(box_features)
         self.temp = 1
-        self.feature_publisher =rospy.Publisher(feature_channel, Float64MultiArray, queue_size =10)
+        self.bbox_publisher =rospy.Publisher(bbox_channel, Float64MultiArray, queue_size =10)
+        self.feat_publisher =rospy.Publisher(feat_channel, Float64MultiArray, queue_size =10)
+        self.similarity_publisher =rospy.Publisher(similarity_channel, Float64MultiArray, queue_size =10)
         self.image_subscriber = rospy.Subscriber(camera_channel, Image, self._process_image)
         self.msg = None
 
@@ -65,7 +68,7 @@ class ImgProcessor:
         exp = np.exp(cos*self.temp)
         Z = np.sum(exp)
         probs = exp/Z
-        return probs
+        return probs,cos
 
 
     def _process_image(self, msg):
@@ -75,19 +78,30 @@ class ImgProcessor:
         orig = img.copy()[:,:,::-1]
         feats, boxes = self.preprocess(img)
         maxbox = np.zeros((len(self.query),4))
+        maxfeats = np.zeros((len(self.query),256))
+        maxsim = np.zeros((len(self.query),1))
         for q in range(len(self.query)):
-            probs = self.get_probs(feats, self.query[q])
+            probs, cos = self.get_probs(feats, self.query[q])
             nprobs = np.tile(probs, [1,4])
             softbox = np.sum(nprobs*boxes, axis = 0)
-            max_box = boxes[np.argmax(probs)]
+            argmax= np.argmax(probs)
+            max_box = boxes[argmax]
             max_box[::2] /=img.shape[0]
             max_box[1::2] /=img.shape[1]
             maxbox[q,:] = max_box
+            maxfeats[q,:] = feats[argmax]
+            maxsim[q,:] = cos[argmax]
         self.prevmaxbox = max_box
         self.fps = maxbox.flatten()
         new_msg = Float64MultiArray()
         new_msg.data = self.fps
-        self.feature_publisher.publish(new_msg)
+        self.bbox_publisher.publish(new_msg)
+        new_msgf = Float64MultiArray()
+        new_msgf.data = maxfeats.flatten()
+        self.feat_publisher.publish(new_msgf)
+        new_msgs = Float64MultiArray()
+        new_msgs.data = maxsim.flatten()
+        self.similarity_publisher.publish(new_msgs)
 
     def listen(self):
 
