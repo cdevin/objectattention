@@ -2,7 +2,7 @@
 
 Attending to objects for robot learning.
 
-This code provides an interface to the attention mechanism described in "Deep Object-Centric Representations forGeneralizable Robot Learning" (Devin et al. 2017). It uses a tensorflow model to attend to objects and it publishes the results to ROS at about 10-20Hz on our machines. This is intended to be used with an robot learning package such as Guided Policy Search  (https://github.com/cbfinn/gps)
+This code provides an interface to the attention mechanism described in "Deep Object-Centric Representations forGeneralizable Robot Learning" (Devin et al. 2017) available on arxiv https://arxiv.org/abs/1708.04225. It uses a tensorflow model to attend to objects and it publishes the results to ROS at about 10-20Hz on our machines. This is intended to be used with an robot learning package such as Guided Policy Search  (https://github.com/cbfinn/gps)
 
 This code is written for Python2 and Tensorflow 1.2, and ROS Indigo. 
 For dependencies, we recommend using a python virtualenv to avoid conflicts with other pip installs. This is done in the install script:
@@ -52,3 +52,7 @@ Finally, to publish the attention to ros, run:
 ```
 python bbox_node.py taskdata/pouring/myexperiment/attention_queries.npy
 ```
+
+Acknowledgements:
+We thank Ronghang Hu for porting RPN from https://github.com/rbgirshick/py-faster-rcnn to tensorflow.
+This work was done with the support of Huawei Technologies and the National Science Foundation.
