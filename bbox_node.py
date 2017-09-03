@@ -53,7 +53,7 @@ class ImgProcessor:
         boxes = self.proposer.extract_proposal(images)
         images[:,:] += np.array([122.7717, 102.9801, 115.9465 ])
         crops = [self.proposer.get_crop(b, images) for b in boxes]
-        feats = self.featurizer.getManyFeatures(crops)
+        feats = self.featurizer.getManyFeatures(crops)[:self.num_boxes]
         boxes = [b for b in boxes][:self.num_boxes]
         return np.array(feats), np.array(boxes)
 
