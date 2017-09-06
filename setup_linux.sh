@@ -32,6 +32,7 @@ pip install opencv-python
 pip install tkinter
 pip install pillow
 pip install IPython
+pip intall opencv-python
 
 echo "Downloading network weights"
 wget https://people.eecs.berkeley.edu/~coline/data/bvlc_alexnet.npy .

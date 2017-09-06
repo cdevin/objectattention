@@ -23,7 +23,6 @@ class ImgProcessor:
         """
         print "start"
         self._camera_channel = camera_channel
-        self._feature_channel = feature_channel
         self.curr_img = None
         self.fps = None
         print "session"
@@ -40,7 +39,7 @@ class ImgProcessor:
     def init_model(self, box_features):
         self.proposer = BBProposer()
         self.featurizer = AlexNetFeaturizer()
-        self.num_boxes = 30
+        self.num_boxes = 10
         self.query = box_features
 
     def preprocess(self, images, draw = False):
@@ -50,11 +49,12 @@ class ImgProcessor:
         if np.max(images) < 2.0:
             images = images*255
         images[:,:] -= np.array([122.7717, 102.9801, 115.9465 ])
-        boxes = self.proposer.extract_proposal(images)
+        boxes = self.proposer.extract_proposal(images)[:self.num_boxes]
         images[:,:] += np.array([122.7717, 102.9801, 115.9465 ])
         crops = [self.proposer.get_crop(b, images) for b in boxes]
-        feats = self.featurizer.getManyFeatures(crops)[:self.num_boxes]
-        boxes = [b for b in boxes][:self.num_boxes]
+        feats = [self.featurizer.getFeatures(c) for c in crops]
+        #feats = self.featurizer.getManyFeatures(crops)
+        boxes = [b for b in boxes]
         return np.array(feats), np.array(boxes)
 
     def draw_boxes(self, boxes, im, c=1):
@@ -73,6 +73,7 @@ class ImgProcessor:
 
     def _process_image(self, msg):
         self.msg = msg
+        t = time.clock()
         img = np.fromstring(msg.data, np.uint8)
         img =  np.reshape(img, (480,480,3))
         orig = img.copy()[:,:,::-1]
@@ -85,7 +86,8 @@ class ImgProcessor:
             nprobs = np.tile(probs, [1,4])
             softbox = np.sum(nprobs*boxes, axis = 0)
             argmax= np.argmax(probs)
-            max_box = boxes[argmax]
+            max_box = boxes[argmax].copy()
+            #import IPython; IPython.embed()
             max_box[::2] /=img.shape[0]
             max_box[1::2] /=img.shape[1]
             maxbox[q,:] = max_box
@@ -102,7 +104,8 @@ class ImgProcessor:
         new_msgs = Float64MultiArray()
         new_msgs.data = maxsim.flatten()
         self.similarity_publisher.publish(new_msgs)
-
+        t2 = time.clock()
+        print t2-t
     def listen(self):
 
         while True:
