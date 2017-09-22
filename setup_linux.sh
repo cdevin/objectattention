@@ -21,18 +21,20 @@ else
     fi
 fi
 
-pip install numpy==1.11.0
+pip install --ignore-installed  numpy==1.11.0
 pip install matplotlib
 pip install easydict
 pip install Cython==0.26
 pip install pyyaml
 pip install rospy
-pip install --upgrade tensorflow-gpu #pip install --upgrade tensorflow
+pip install --upgrade --ignore-installed tensorflow-gpu #pip install --upgrade tensorflow
 pip install opencv-python
 pip install tkinter
 pip install pillow
 pip install IPython
-pip intall opencv-python
+pip install opencv-python
+pip install rospkg
+pip install catkin_pkg
 
 echo "Downloading network weights"
 wget https://people.eecs.berkeley.edu/~coline/data/bvlc_alexnet.npy .
