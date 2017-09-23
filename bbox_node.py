@@ -28,9 +28,9 @@ class ImgProcessor:
         print "session"
         self.init_model(box_features)
         self.temp = 1
-        self.bbox_publisher =rospy.Publisher(bbox_channel, Float64MultiArray, queue_size =10)
-        self.feat_publisher =rospy.Publisher(feat_channel, Float64MultiArray, queue_size =10)
-        self.similarity_publisher =rospy.Publisher(similarity_channel, Float64MultiArray, queue_size =10)
+        self.bbox_publisher =rospy.Publisher(bbox_channel, Float64MultiArray, queue_size =1)
+        self.feat_publisher =rospy.Publisher(feat_channel, Float64MultiArray, queue_size =1)
+        self.similarity_publisher =rospy.Publisher(similarity_channel, Float64MultiArray, queue_size =1)
         self.image_subscriber = rospy.Subscriber(camera_channel, Image, self._process_image)
         self.msg = None
 
@@ -39,7 +39,7 @@ class ImgProcessor:
     def init_model(self, box_features):
         self.proposer = BBProposer()
         self.featurizer = AlexNetFeaturizer()
-        self.num_boxes = 10
+        self.num_boxes = 30
         self.query = box_features
 
     def preprocess(self, images, draw = False):
@@ -73,7 +73,6 @@ class ImgProcessor:
 
     def _process_image(self, msg):
         self.msg = msg
-        t = time.clock()
         img = np.fromstring(msg.data, np.uint8)
         img =  np.reshape(img, (480,480,3))
         orig = img.copy()[:,:,::-1]
@@ -104,8 +103,6 @@ class ImgProcessor:
         new_msgs = Float64MultiArray()
         new_msgs.data = maxsim.flatten()
         self.similarity_publisher.publish(new_msgs)
-        t2 = time.clock()
-        print t2-t
     def listen(self):
 
         while True:
