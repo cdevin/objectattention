@@ -1,4 +1,4 @@
-# objectattention-private
+# objectattention
 
 Attending to objects for robot learning.
 
