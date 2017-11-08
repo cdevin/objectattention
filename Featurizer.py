@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 import sys
-curr_dir = sys.path[0]
+import os
+curr_dir =os.path.dirname(os.path.abspath(__file__)) # sys.path[0]
 sys.path = [curr_dir, curr_dir+'/rpn_net/util/faster_rcnn_lib', curr_dir+'/rpn_net'] + sys.path[1:]
 from fast_rcnn.config import cfg
 from fast_rcnn.test import im_proposal_tensorflow, im_detect_tensorflow
@@ -13,7 +14,7 @@ sess_tuple = None
 
 class BBProposer:
     def __init__(self):
-        self.model_file = 'rpn_net/model/fasterrcnn_vgg_coco_net.tfmodel'
+        self.model_file = curr_dir+'/rpn_net/model/fasterrcnn_vgg_coco_net.tfmodel'
         global sess_tuple
         # Construct the computation graph
         input_batch = tf.placeholder(tf.float32, [1, None, None, 3])
@@ -90,7 +91,7 @@ def conv(input, kernel, biases, k_h, k_w, c_o, s_h, s_w,  padding="VALID", group
 class AlexNetFeaturizer:
 
     def __init__(self):
-        net_data = load("bvlc_alexnet.npy").item()
+        net_data = load(curr_dir+"/bvlc_alexnet.npy",encoding='latin1').item()
         x = tf.placeholder(tf.float32, shape=(None,None, None,3))
         self.input = x
         print(x)
@@ -203,6 +204,5 @@ class AlexNetFeaturizer:
         x = x.astype(np.float32)
         f = self.sess.run(self.out, feed_dict={self.input: x})
         s = f.shape
-        print(s)
         f2 = f.reshape((s[0]*s[1]*s[2], s[3]))
         return f2
