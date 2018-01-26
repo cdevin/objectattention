@@ -1,5 +1,5 @@
 
-import Tkinter
+import tkinter as Tkinter
 from PIL import Image, ImageTk
 from sys import argv
 
@@ -81,7 +81,7 @@ class BoxPicker:
         self.drawbox(box)
 
     def savefeats(self, event):
-        print "Saving features to", self.name
+        print("Saving features to", self.name)
         np.save(self.name, self.feats[self.boxlist[self.listpos]])
 
     def click(self,event):
@@ -90,11 +90,11 @@ class BoxPicker:
         self.boxlist = self.pix2boxes[(x,y)]
         self.listpos = 0
         if len(self.boxlist) > 0:
-            print "There are", len(self.boxlist), "boxes around this pixel."
+            print("There are", len(self.boxlist), "boxes around this pixel.")
             self.drawbox(self.boxlist[self.listpos])
 
         else:
-            print "No box was selected, please try again"
+            print("No box was selected, please try again")
 
 
 image = Image.open(argv[1])
