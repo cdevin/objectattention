@@ -24,7 +24,7 @@ for i in range(all_img.shape[0]):
     all_feat = np.concatenate((all_feat, feats.reshape([1,num_boxes,256])), axis=0)
     all_boxes = np.concatenate((all_boxes, boxes.reshape([1,num_boxes,4])), axis=0)
 
-print "saving..."
+print("saving...")
 np.save(demo_dir+doc['middata']['features'], all_feat)
 np.save(demo_dir+doc['middata']['boxes'], all_boxes)
-print "done!"
+print("done!")

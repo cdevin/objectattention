@@ -75,7 +75,7 @@ class ProposalModel:
             queries.append(w)
             tiled_w = tf.tile(w, [batch_num])
             reshaped_w = tf.reshape(tiled_w, [-1, feat_len,1 ])
-            print reshaped_w
+            print(reshaped_w)
             self.reshaped_w = reshaped_w
             self.tiled_w = tiled_w
             cosine_similarity = tf.abs(tf.matmul(normed_feats, reshaped_w))
@@ -89,7 +89,7 @@ class ProposalModel:
             arg_feat = tf.reduce_sum(prob*normed_feats,1)
             arg_feats.append(arg_feat)
             arg_boxes.append(arg_box)
-            print cosine_similarity
+            print(cosine_similarity)
             entropy = -tf.reduce_sum(prob*tf.log(prob))
             entropies.append(entropy)
             prob1 = tf.reshape(prob1, [-1, self.num_boxes])
@@ -166,7 +166,7 @@ class ProposalModel:
                 loss, _ = self.sess.run([self.loss,self.opt_op], feed_dict)
                 average_loss += loss
                 if i == 0 or (i+1) % 500 == 0:
-                    print 'tensorflow iteration', i+1,'   average train loss',average_loss / min(i+1, 500)
+                    print('tensorflow iteration', i+1,'   average train loss',average_loss / min(i+1, 500))
                     average_loss = 0
                     feed_dict = {self.state_input: vX,
                                  self.feat_list: vfeats,
@@ -174,7 +174,7 @@ class ProposalModel:
                                  self.u_output : vU,
                              }
                     valloss = self.sess.run([self.loss], feed_dict)[0]
-                    print "val loss", valloss
+                    print("val loss", valloss)
                     var_dict = {}
                     vs = tf.global_variables()
                     for v in vs:
@@ -184,7 +184,7 @@ class ProposalModel:
                     if valloss < best_val:
                         best_val = valloss
                         best_val_id = i+1
-                        print "BEST___________________", i+1
+                        print("BEST___________________", i+1)
 
     def assign_weights(self, weights_file='best_push_weights.pkl'):
         with self.graph.as_default():
@@ -238,10 +238,10 @@ if __name__== '__main__':
     X = np.load(demo+'/'+doc['data']['states'])
     U = np.load(demo+'/'+doc['data']['deltas'])
     model = ProposalModel(dim_input=X.shape[1],num_queries=q, num_boxes=b, dim_u = U.shape[1])
-    print "Made model!"
+    print("Made model!")
     if SAVE:
         weights_file = demo+'/'+exp+'/weights_iter'+str(SAVE)+'.pkl'
-        print weights_file
+        print(weights_file)
         model.assign_weights(weights_file)
         w = model.sess.run(model.queries)
         np.save(demo+'/'+exp+'/'+'attention_queries.npy', w)
@@ -251,7 +251,7 @@ if __name__== '__main__':
         imgs = np.load(im_file)
         imgs = imgs.reshape((-1, doc['data']['image_height'],doc['data']['image_width'], 3))
         weights_file = demo+'/'+exp+'/weights_iter'+str(TEST)+'.pkl'
-        print weights_file
+        print(weights_file)
         model.assign_weights(weights_file)
         for t in range(100):
             img = imgs[t*20]
@@ -265,12 +265,12 @@ if __name__== '__main__':
         imgs = np.load(demo+'/'+doc['data']['images'])[indices]
         feats = np.load(demo+'/'+doc['middata']['features'])[indices]
         boxes = np.load(demo+'/'+doc['middata']['boxes'])[indices]
-        print "loaded data"
+        print("loaded data")
         X = X[indices]
         U = U[indices]
         if initq is not None:
             w = np.load(initq)
-            print "Loaded W", w
+            print("Loaded W", w)
             with model.graph.as_default():
                 var_dict = {v.name: v for v in tf.global_variables()}
                 v = var_dict['query0:0']
