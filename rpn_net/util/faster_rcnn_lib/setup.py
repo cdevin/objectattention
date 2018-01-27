@@ -4,7 +4,7 @@
 # Licensed under The MIT License [see LICENSE for details]
 # Written by Ross Girshick
 # --------------------------------------------------------
-import future
+#import future
 import os
 from os.path import join as pjoin
 from setuptools import setup
