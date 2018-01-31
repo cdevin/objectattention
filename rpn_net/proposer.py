@@ -12,12 +12,12 @@ from fast_rcnn.test import im_proposal_tensorflow, im_detect_tensorflow
 import fastrcnn_vgg_net, rpn_net
 
 
-model_file = 'model/fasterrcnn_vgg_coco_net.tfmodel'
+model_file = '/home/murtaza/Documents/objectattention2/objectattention/rpn_net/model/fasterrcnn_vgg_coco_net.tfmodel'
 sess_tuple = None
 
 class BBProposer:
     def __init__(self):
-        self.model_file = '/home/coline/visual_features/detection/tracking/rpn_net/model/fasterrcnn_vgg_coco_net.tfmodel'
+        self.model_file = '/home/murtaza/Documents/objectattention2/objectattention/rpn_net/model/fasterrcnn_vgg_coco_net.tfmodel'
         global sess_tuple
         # Construct the computation graph
         input_batch = tf.placeholder(tf.float32, [1, None, None, 3])

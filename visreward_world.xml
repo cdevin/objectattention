@@ -1,0 +1,92 @@
+<mujoco model="arm3d">
+    <compiler angle="radian" coordinate="local" inertiafromgeom="true" meshdir="mesh" texturedir="textures" />
+    <option gravity="0 0 0" integrator="Euler" iterations="20" timestep="0.01" />
+
+    <asset>
+        <mesh file="mug.stl" name="mug_mesh" scale="0.012 0.012 0.012" />
+        <mesh file="fork.stl" name="fork_mesh" scale="0.003 0.003 0.003" />
+
+        <mesh file="lamp_rod.stl" name="lamp_rod_mesh" scale="0.002 0.002 0.002" />
+        <mesh file="oil_bottle.stl" name="oil_bottle_mesh" scale="0.00125 0.00125 0.00125" />
+
+        <mesh file="vase.stl" name="vase_mesh" scale="0.008 0.008 0.008" />
+        <mesh file="stool.stl" name="stool_mesh" scale="0.01 0.01 0.01" />
+
+    <texture file="describable/dtd/images/matted/matted_0131.png" name="vase_texture" /><material name="vase_material" rgba="1 1 1 1" shininess="0.3" specular="1" texture="vase_texture" /><texture file="describable/dtd/images/freckled/freckled_0075.png" name="fork_texture" /><material name="fork_material" rgba="1 1 1 1" shininess="0.3" specular="1" texture="fork_texture" /><texture file="describable/dtd/images/spiralled/spiralled_0041.png" name="stool_texture" /><material name="stool_material" rgba="1 1 1 1" shininess="0.3" specular="1" texture="stool_texture" /><texture file="describable/dtd/images/honeycombed/honeycombed_0120.png" name="oil_bottle_texture" /><material name="oil_bottle_material" rgba="1 1 1 1" shininess="0.3" specular="1" texture="oil_bottle_texture" /><texture file="table/metal-texture/pic_017.png" name="coaster_texture" /><material name="coaster_material" rgba="1 1 1 1" shininess="0.3" specular="1" texture="coaster_texture" /><texture file="table/wood-texture/pic_011.png" name="table_texture" type="2d" /><material name="table_material" shininess="0.1" specular="0.4" texrepeat="1 1" texture="table_texture" /><texture file="describable/dtd/images/honeycombed/honeycombed_0156.png" name="logo_texture" /><material name="logo_material" rgba="1 1 1 1" shininess="0.3" specular="1" texture="logo_texture" /><texture file="describable/dtd/images/banded/banded_0023.png" name="lamp_rod_texture" /><material name="lamp_rod_material" rgba="1 1 1 1" shininess="0.3" specular="1" texture="lamp_rod_texture" /></asset>
+
+    <default>
+        <joint armature="0.04" damping="1" limited="true" />
+        <geom conaffinity="0" condim="1" contype="0" density="300" friction=".8 .1 .1" margin="0.002" />
+    </default>
+
+    <worldbody>
+        <light diffuse=".5 .5 .5" dir="0 0 -1" pos="0 0 3" />
+
+         <!-- <geom conaffinity="1" contype="1" rgba="0.2 0.5 0.2 1" name="table" pos="0 0.5 -0.325" size="1 1 0.1" type="plane" /> -->
+        <geom conaffinity="1" contype="1" material="table_material" name="table" pos="0 0.5 -0.325" size="1 1 0.1" type="plane" />
+          <geom conaffinity="1" contype="1" fromto="-0. 0.4 -0.320 0.8 0.4 -0.320" size="0.04" rgba="1 1 1 0" type="capsule" />
+          <geom conaffinity="1" contype="1" fromto="-0. -.4 -0.320 0.8 -0.4 -0.320" size="0.04" rgba="1 1 1 0" type="capsule" />
+          <geom conaffinity="1" contype="1" fromto="-0. 0.4 -0.320 -0. -0.4 -0.320" size="0.04" rgba="1 1 1 0" type="capsule" />
+          <geom conaffinity="1" contype="1" fromto="0.8 0.4 -0.320 0.8 -.4 -0.320" size="0.04" rgba="1 1 1 0" type="capsule" />
+
+
+
+        <body name="wrist base" pos="0.45 0.15 -0.320">
+            <joint axis="0 1 0" damping="0.5" name="wrist_slidey" pos="0 0 0" range="-10.3213 10.3" type="slide" />
+            <joint axis="1 0 0" damping="0.5" name="wrist_slidex" pos="0 0 0" range="-10.3213 10.3" type="slide" />
+            <joint axis="0 0 1" damping="0.5" name="wrist_hinge" pos="0 0 0" range="-10.3213 10.3" type="hinge" />
+          <body name="tips_arm" pos="0 0 0">
+            <geom name="tip_arml" pos="0.1 -0.1 0." size="0.01" type="sphere" />
+            <geom name="tip_armr" pos="0.1 0.1 0." size="0.01" type="sphere" />
+            <site name="arm" pos="0.02 0 0" size="0.001" />
+          </body>
+          <geom conaffinity="1" contype="1" fromto="0 -0.1 0. 0.0 +0.1 0" size="0.02" type="capsule" />
+          <geom conaffinity="1" contype="1" fromto="0 -0.1 0. 0.1 -0.1 0" size="0.02" type="capsule" />
+          <geom conaffinity="1" contype="1" fromto="0 +0.1 0. 0.1 +0.1 0." size="0.02" type="capsule" />
+        </body>
+
+        <body name="object" pos="0.4 -0.0 -0.263">
+            <geom density="0.00001" rgba="1 1 1 0" size="0.05 0.05 0.05" type="sphere" />
+            <site name="mug" pos="0 0 0" size="0.001" />
+            <body axisangle="1 0 0 1.57" pos="0 0 0">
+                <geom conaffinity="1" contype="1" density="0.00001" material="logo_material" mesh="mug_mesh" rgba="1 1 1 1" type="mesh" />
+            </body>
+            <joint axis="0 1 0" damping="1.5" name="obj_slidey" pos="0.01 0.01 0.01" range="-10.3213 10.3" type="slide" />
+            <joint axis="1 0 0" damping="1.5" name="obj_slidex" pos="0.01 0.01 0.01" range="-10.3213 10.3" type="slide" />
+        </body>
+
+        <body name="goal" pos="0.4 -0.0 -0.3230">
+            <site name="goal" pos="0 0 0" size="0.001" />
+            <geom conaffinity="0" contype="0" density="0.00001" material="coaster_material" rgba="1. 1. 1. 1" size="0.08 0.001 0.1" type="cylinder" />
+            <!-- <joint axis="0 1 0" damping="0.5" name="goal_slidey" pos="0 0 0" range="-10.3213 10.3" type="slide" /> -->
+            <!-- <joint axis="1 0 0" damping="0.5" name="goal_slidex" pos="0 0 0" range="-10.3213 10.3" type="slide" /> -->
+        </body>
+        <!-- <body name="oil_bottle" pos="0.113729391255 -0.187150031403 -0.3030"> -->
+        <!--     <\!-- <site name="mug" pos="0 0 0" size="0.001" /> -\-> -->
+        <!--     <joint axis="0 1 0" damping="1.5" name="oil_slidey" pos="0.01 0.01 0.01" range="-10.3213 10.3" type="slide" /> -->
+        <!--     <joint axis="1 0 0" damping="1.5" name="oil_slidex" pos="0.01 0.01 0.01" range="-10.3213 10.3" type="slide" /> -->
+        <!--     <joint axis="0 0 1" damping="0.5" name="oil_hinge" pos="0 0 0" range="-10.3213 10.3" type="hinge" /> -->
+
+        <!--     <\!-- <joint axis="0 1 0" damping="0.5"  pos="0 0 0" range="-10.3213 10.3" type="slide" /> -\-> -->
+        <!--     <\!-- <joint axis="1 0 0" damping="0.5"  pos="0 0 0" range="-10.3213 10.3" type="slide" /> -\-> -->
+	<!--     <geom type="capsule" fromto="0.01 0 0 0 0 0" size="0.001" /> -->
+        <!--         <body axisangle="1 0 0 1.57" pos="0 0 0"> -->
+        <!--             <geom conaffinity="1" contype="1" density="0.00001" material="oil_bottle_material" mesh="oil_bottle_mesh" rgba="1 1 1 1" type="mesh" /> -->
+        <!--         </body> -->
+        <!-- </body> -->
+
+    </worldbody>
+
+    <actuator>
+        <!-- <motor ctrllimited="true" ctrlrange="-2.0 2.0" joint="r_shoulder_pan_joint" /> -->
+        <!-- <motor ctrllimited="true" ctrlrange="-2.0 2.0" joint="r_shoulder_lift_joint" /> -->
+        <!-- <motor ctrllimited="true" ctrlrange="-2.0 2.0" joint="r_upper_arm_roll_joint" /> -->
+        <!-- <motor ctrllimited="true" ctrlrange="-2.0 2.0" joint="r_elbow_flex_joint" /> -->
+        <!-- <motor ctrllimited="true" ctrlrange="-2.0 2.0" joint="r_forearm_roll_joint" /> -->
+        <motor ctrllimited="true" ctrlrange="-2.0 2.0" joint="wrist_slidex" />
+        <motor ctrllimited="true" ctrlrange="-3.14 3.14" joint="wrist_hinge" />
+        <motor ctrllimited="true" ctrlrange="-2.0 2.0" joint="wrist_slidey" />
+        <!-- <motor ctrllimited="true" ctrlrange="-2.0 2.0" joint="wrist_hinge" /> -->
+    </actuator>
+
+</mujoco>
