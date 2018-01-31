@@ -13,7 +13,7 @@ sess_tuple = None
 
 class BBProposer:
     def __init__(self):
-        self.model_file = 'rpn_net/model/fasterrcnn_vgg_coco_net.tfmodel'
+        self.model_file = '/home/murtaza/Documents/objectattention2/objectattention/rpn_net/model/fasterrcnn_vgg_coco_net.tfmodel'
         global sess_tuple
         # Construct the computation graph
         input_batch = tf.placeholder(tf.float32, [1, None, None, 3])
@@ -90,10 +90,9 @@ def conv(input, kernel, biases, k_h, k_w, c_o, s_h, s_w,  padding="VALID", group
 class AlexNetFeaturizer:
 
     def __init__(self):
-        net_data = load("bvlc_alexnet.npy").item()
+        net_data = np.load("/home/murtaza/Documents/objectattention2/objectattention/bvlc_alexnet.npy",encoding='latin1').item()
         x = tf.placeholder(tf.float32, shape=(None,None, None,3))
         self.input = x
-        print(x)
         k_h = 11; k_w = 11; c_o = 96; s_h = 4; s_w = 4
         conv1W = tf.Variable(net_data["conv1"][0])
         conv1b = tf.Variable(net_data["conv1"][1])
